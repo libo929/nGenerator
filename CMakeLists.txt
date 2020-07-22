@@ -42,6 +42,7 @@ target_link_libraries(NeutronGen ${Geant4_LIBRARIES} )
 set(NeutronGen_SCRIPTS
     template.mac
 	test.mac
+	vis.mac
 	batchRun.sh
 	plotXS.C
   )
