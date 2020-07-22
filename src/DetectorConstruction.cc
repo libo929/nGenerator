@@ -39,6 +39,7 @@
 #include "G4Box.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
+#include "G4Tubs.hh"
 
 #include "G4GeometryManager.hh"
 #include "G4PhysicalVolumeStore.hh"
@@ -59,12 +60,10 @@ DetectorConstruction::DetectorConstruction()
  fAbsorMaterial(nullptr), fLAbsor(nullptr), fWorldMaterial(nullptr),
  fWorldVolume(nullptr), fDetectorMessenger(nullptr)
 {
-  // default geometrical parameters
-  fAbsorThickness = 1*cm;
-  fAbsorSizeYZ    = 1*cm;
-  fWorldSizeX     = 1.2*fAbsorThickness;
-  fWorldSizeYZ    = 1.2*fAbsorSizeYZ;
+ // fAbsorThickness = 1*cm;
+ // fAbsorSizeYZ    = 1*cm;
 
+ // fAbsorThickness = 1*cm;
   // materials
   DefineMaterials();
   //SetAbsorMaterial("G4_Co");
@@ -163,13 +162,22 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
 
   // World
   //
-  fWorldSizeX     = 1.2*fAbsorThickness;
-  fWorldSizeYZ    = 1.2*fAbsorSizeYZ;
+  //fWorldSizeX     = 1.2*fAbsorThickness;
+  //fWorldSizeYZ    = 1.2*fAbsorSizeYZ;
+  G4double heightOfTheTube=0.0045*cm; 
+  G4double outerRadiusOfTheTube=1.5*cm;
+
+  //fWorldSizeX     = 1.2*heightOfTheTube;
+  //fWorldSizeYZ    = 1.2*outerRadiusOfTheTube;
+  fWorldSizeX     = 3.2 * cm;
+  fWorldSizeYZ    = 3.2 * cm;
   
   G4Box*
   sWorld = new G4Box("World",                                 //name
               fWorldSizeX/2,fWorldSizeYZ/2,fWorldSizeYZ/2);   //dimensions
 
+
+  
   G4LogicalVolume*
   lWorld = new G4LogicalVolume(sWorld,                  //shape
                              fWorldMaterial,            //material
@@ -185,9 +193,39 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                             
   // Absorber
   //
+  // default geometrical parameters
+  G4double innerRadiusOfTheTube=0.*cm;
+  G4double startAngleOfTheTube=0.*deg;
+  G4double spanningAngleOfTheTube=360.*deg;
+  G4RotationMatrix* rotD3 = new G4RotationMatrix();
+  //rotD3->rotateX(90.*deg);
+  //rotD3->rotateY(90.*deg);
+  
+  G4Tubs* target= new G4Tubs("target",
+ 		 innerRadiusOfTheTube,
+ 		 outerRadiusOfTheTube,
+ 		 heightOfTheTube,
+ 		 startAngleOfTheTube,
+ 		 spanningAngleOfTheTube);
+
+ fLAbsor = new G4LogicalVolume(target,                        //shape
+                               fAbsorMaterial,                //material
+                               fAbsorMaterial->GetName());    //name
+                               
+           new G4PVPlacement(rotD3,                     //rotation
+                           G4ThreeVector(),             //at (0,0,0)
+                           fLAbsor,                     //logical volume
+                           fAbsorMaterial->GetName(),   //name
+                           lWorld,                      //mother  volume
+                           false,                       //no boolean operation
+                           0);                          //copy number
+
+  //////////////////////////////////////////////////////////////////////////////////
+#if 0
   G4Box* sAbsor = new G4Box("Absorber",                       //name
         fAbsorThickness/2, fAbsorSizeYZ/2, fAbsorSizeYZ/2);   //dimensions
 
+  
  fLAbsor = new G4LogicalVolume(sAbsor,                        //shape
                                fAbsorMaterial,                //material
                                fAbsorMaterial->GetName());    //name
@@ -199,6 +237,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructVolumes()
                            lWorld,                      //mother  volume
                            false,                       //no boolean operation
                            0);                          //copy number
+#endif
 
   PrintParameters();
   
@@ -220,6 +259,7 @@ void DetectorConstruction::PrintParameters()
 
 void DetectorConstruction::SetAbsorMaterial(G4String materialChoice)
 {
+#if 0
   // search the material by its name
   G4Material* pttoMaterial =
      G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);   
@@ -232,6 +272,31 @@ void DetectorConstruction::SetAbsorMaterial(G4String materialChoice)
     G4cout << "\n--> warning from DetectorConstruction::SetMaterial : "
            << materialChoice << " not found" << G4endl;
   }              
+#endif
+
+    G4Isotope* D  = new G4Isotope("Deuteron", 1, 2, 2.0141018* CLHEP::g / CLHEP::mole);
+    G4Element* elD = new G4Element("Deuterium","elD", 1);
+    elD->AddIsotope(D, 1);
+
+
+    //----build TiD---------------------------------------
+    G4double density;
+    G4String name;
+    G4int ncomponents;
+    G4double fractionmass;    
+    
+    G4Element* elTi=G4NistManager::Instance()->FindOrBuildElement(22);
+    
+    density = 3.79*g/cm3;
+    G4Material* matTiD = new G4Material(name="TiD1.6",density,ncomponents=2);
+    matTiD->AddElement(elD, fractionmass=3.26*perCent);
+    matTiD->AddElement(elTi, fractionmass=96.74*perCent);
+    
+    //-------------------------------------------
+    //fAbsorMaterial = matD;
+    fAbsorMaterial = matTiD;
+    if(fLAbsor) { fLAbsor->SetMaterial(fAbsorMaterial); }
+    G4RunManager::GetRunManager()->PhysicsHasBeenModified();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
