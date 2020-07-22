@@ -112,6 +112,14 @@ void HistoManager::Book()
     G4int ih = analysisManager->CreateH1(id[k], " population",nbins,vmin,vmax);
     analysisManager->SetH1Activation(ih, false);
   }
+
+  analysisManager->CreateNtuple("neutronPDir", "momVec");
+  analysisManager->CreateNtupleDColumn("px");
+  analysisManager->CreateNtupleDColumn("py");
+  analysisManager->CreateNtupleDColumn("pz");
+  analysisManager->CreateNtupleDColumn("energy");
+  analysisManager->CreateNtupleDColumn("time");
+  analysisManager->FinishNtuple(); 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

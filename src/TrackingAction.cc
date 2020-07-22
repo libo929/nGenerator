@@ -139,10 +139,11 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
   fTimeEnd         = track->GetGlobalTime();
   if ((particle->GetPDGStable())&&(ekin == 0.)) fTimeEnd = DBL_MAX;
 
-#if 0
-  //if(ekin > 0.01 * MeV) 
+#if 1
+  if(particle == G4Alpha::Alpha())
   {
-	  if(track->GetParentID()==1) return;
+      //if(track->GetParentID()==1) return;
+
       G4cout << "track ID: " << track->GetTrackID() 
 		  << ", ekin: " << ekin << ", particle: " << particle->GetParticleName() << G4endl;
       G4cout << "parent track ID: " << track->GetParentID() << G4endl;
@@ -181,6 +182,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
  G4String type   = particle->GetParticleType();      
  G4double charge = particle->GetPDGCharge();
  G4double time   = track->GetGlobalTime();
+
  if (charge > 3.)  {ih1 = 10; ih2 = 20;}
  else if (particle == G4Gamma::Gamma())       {ih1 = 4;  ih2 = 14;}
  else if (particle == G4Electron::Electron()) {ih1 = 5;  ih2 = 15;}
@@ -193,9 +195,24 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
  else if (type == "baryon")                   {ih1 = 11; ih2 = 21;}
  else if (type == "meson")                    {ih1 = 12; ih2 = 22;}
  else if (type == "lepton")                   {ih1 = 13; ih2 = 23;};
+
+ if(particle == G4Neutron::Neutron())
+ {
+     const G4ThreeVector& momVec = track->GetMomentumDirection();
+
+	 G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
+
+	 analysisManager->FillNtupleDColumn(0, momVec.x());
+	 analysisManager->FillNtupleDColumn(1, momVec.y());
+	 analysisManager->FillNtupleDColumn(2, momVec.z());
+	 analysisManager->FillNtupleDColumn(3, ekin);
+	 analysisManager->FillNtupleDColumn(4, time);
+
+	 analysisManager->AddNtupleRow();
+ }
+
  if (ih1 > 0) analysis->FillH1(ih1,ekin);
  if (ih2 > 0) analysis->FillH1(ih2,time);
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
