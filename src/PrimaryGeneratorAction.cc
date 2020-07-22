@@ -41,6 +41,7 @@
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+#include "HistoManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -71,9 +72,9 @@ void PrimaryGeneratorAction::SetDefaultKinematic()
            = G4ParticleTable::GetParticleTable()->FindParticle("proton");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleEnergy(10*MeV);  
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   G4double position = -0.45*(fDetector->GetWorldSizeX());
-  fParticleGun->SetParticlePosition(G4ThreeVector(position,0.*cm,0.*cm));
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.*cm,0.*cm,-1.*cm));
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -86,12 +87,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   if (fRndmBeam > 0.) 
     {
       G4ThreeVector oldPosition = fParticleGun->GetParticlePosition();
-      if (fRndmBeam > fDetector->GetAbsorSizeYZ())
-        fRndmBeam = fDetector->GetAbsorSizeYZ(); 
+      //if (fRndmBeam > fDetector->GetAbsorSizeYZ())
+      //  fRndmBeam = fDetector->GetAbsorSizeYZ(); 
       G4double rbeam = 0.5*fRndmBeam;
-      G4double x0 = oldPosition.x();
-      G4double y0 = oldPosition.y() + (2*G4UniformRand()-1.)*rbeam;
-      G4double z0 = oldPosition.z() + (2*G4UniformRand()-1.)*rbeam;
+
+      G4double rho   = rbeam * sqrt(G4UniformRand());
+      G4double theta = G4UniformRand() * 360. * deg;
+
+      G4double x0 = rho * cos(theta);
+      G4double y0 = rho * sin(theta);
+
+      //G4double x0 = oldPosition.x() + (2*G4UniformRand()-1.)*rbeam;
+      //G4double y0 = oldPosition.y() + (2*G4UniformRand()-1.)*rbeam;
+
+      G4double z0 = oldPosition.z();
       fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
       fParticleGun->GeneratePrimaryVertex(anEvent);
       fParticleGun->SetParticlePosition(oldPosition);      
