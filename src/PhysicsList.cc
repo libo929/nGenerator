@@ -80,30 +80,30 @@ PhysicsList::PhysicsList()
   new G4UnitDefinition("day",    "d",   "Time", day);
   new G4UnitDefinition("year",   "y",   "Time", year);
 
-  // Hadron Elastic scattering
   //RegisterPhysics( new HadronElasticPhysicsHP(verb) );
-  
-  // Hadron Inelastic Physics
   //RegisterPhysics( new G4HadronPhysicsFTFP_BERT_HP(verb));
   //RegisterPhysics( new G4HadronPhysicsQGSP_BERT_HP(verb));
   //RegisterPhysics( new G4HadronPhysicsQGSP_BIC_HP(verb));
-
-  //RegisterPhysics( new G4HadronHElasticPhysics(verb));
   //RegisterPhysics( new G4HadronInelasticQBBC(verb));
-  //RegisterPhysics( new G4IonElasticPhysics(verb));
-  RegisterPhysics( new G4HadronPhysicsQGSP_BIC_AllHP(verb));
-
   //RegisterPhysics( new G4HadronPhysicsINCLXX(verb));
+  //RegisterPhysics( new G4IonQMDPhysics(verb));
+  //RegisterPhysics( new G4IonPhysicsXS(verb));
+  //RegisterPhysics(new G4EmStandardPhysics(verb));
+  //RegisterPhysics( new G4IonINCLXXPhysics(verb));
 
-  //RegisterPhysics( new G4IonPhysicsPHP(verb));
+  ////////////////////////////////////////////////////////////////////////////////////
+  // Hadron Elastic scattering
+  //RegisterPhysics( new G4HadronHElasticPhysics(verb));
+
+  // Hadron Inelastic Physics
+  //RegisterPhysics( new G4HadronPhysicsQGSP_BIC_AllHP(verb));
 
   // Ion Elastic scattering
-  //RegisterPhysics( new G4IonQMDPhysics(verb));
+  //RegisterPhysics( new G4IonElasticPhysics(verb));
 
   // Ion Inelastic Physics
-  //RegisterPhysics( new G4IonPhysicsXS(verb));
-  //RegisterPhysics( new G4IonINCLXXPhysics(verb));
-  
+  RegisterPhysics( new G4IonPhysicsPHP(verb));
+
   // stopping Particles
   //RegisterPhysics( new G4StoppingPhysics(verb));
       
@@ -112,14 +112,13 @@ PhysicsList::PhysicsList()
 
   // EM physics
   //RegisterPhysics(new ElectromagneticPhysics());
-  //RegisterPhysics(new G4EmStandardPhysics(verb));
 
   // seems mandatory ...
   // Decay
   RegisterPhysics(new G4DecayPhysics());
 
   // Radioactive decay
-  //RegisterPhysics(new G4RadioactiveDecayPhysics());
+  RegisterPhysics(new G4RadioactiveDecayPhysics());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
