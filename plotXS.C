@@ -9,7 +9,7 @@ void plotXS()
 
 	int counter = 0;
 
-	for(int iFile = 1900; iFile <= 2400; iFile += 20)
+	for(int iFile = 300; iFile <= 600; iFile += 20)
 	{
 		string fileName("run");
 		fileName = fileName + to_string(iFile) + ".root";
@@ -19,8 +19,9 @@ void plotXS()
         int nNeutron = h->GetEntries();
 
 		float en = iFile/1000.; // in MeV
-		float xs = 1.0 * nNeutron/nIncidents / Nv / thickness; // cm2
-		xs = xs / 1.e-24; // barn
+		float xs = nNeutron;
+		//float xs = 1.0 * nNeutron/nIncidents / Nv / thickness; // cm2
+		//xs = xs / 1.e-24; // barn
 
 	    cout << "Ei: " << en << ", nNeutron: " <<  nNeutron << ", xs: " << xs << endl;
 
@@ -40,8 +41,8 @@ void plotXS()
     gr->SetLineWidth(4);
     gr->SetMarkerColor(4);
     gr->SetMarkerStyle(26);
-    gr->SetTitle("^{7}Li(p, n)^{7}Be cross section");
-    gr->GetXaxis()->SetTitle("proton energy (MeV)");
-    gr->GetYaxis()->SetTitle("cross section (barn)");
+    gr->SetTitle("D(d, n)^{3}He Yield");
+    gr->GetXaxis()->SetTitle("deuteron energy (MeV)");
+    gr->GetYaxis()->SetTitle("Yield)");
     gr->Draw("ACP");
 }
