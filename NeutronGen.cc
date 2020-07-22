@@ -52,6 +52,7 @@
 
 #include "QGSP_INCLXX_HP.hh"
 #include "QGSP_INCLXX.hh"
+#include "QGSP_BIC_AllHP.hh"
 
 #include "FTFP_INCLXX.hh"
 #include "FTFP_INCLXX_HP.hh"
@@ -67,6 +68,11 @@ int main(int argc,char** argv) {
 
   //choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
+
+  long seed = 0;
+  if (argc==3) seed = G4UIcommand::ConvertToInt(argv[2]);
+  CLHEP::HepRandom::setTheSeed(seed);
+  //std::cout << "rand: "  << G4UniformRand() << std::endl;
 
   //construct the default run manager
 #ifdef G4MULTITHREADED
