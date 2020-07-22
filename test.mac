@@ -10,7 +10,7 @@
 #
 /gun/particle deuteron
 /gun/energy 500 keV
-/testhadr/gun/beamSize 16 mm # target 2*radius
+/testhadr/gun/beamSize 8 mm #  2*radius
 #/testhadr/gun/beamTime 10 year
 #
 /analysis/setFileName hist
