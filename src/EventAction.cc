@@ -76,6 +76,13 @@ void EventAction::AddEflow(G4double Eflow)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+G4double EventAction::GetEdep()
+{
+	return fTotalEnergyDeposit;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 void EventAction::EndOfEventAction(const G4Event*)
 {
   Run* run = static_cast<Run*>(

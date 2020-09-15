@@ -136,10 +136,11 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
 
   G4double meanLife = particle->GetPDGLifeTime();
   G4double ekin     = track->GetKineticEnergy();
+  G4double edep     = fEventAction->GetEdep();
   fTimeEnd         = track->GetGlobalTime();
   if ((particle->GetPDGStable())&&(ekin == 0.)) fTimeEnd = DBL_MAX;
 
-#if 1
+#if 0
   if(particle == G4Alpha::Alpha())
   {
       //if(track->GetParentID()==1) return;
@@ -207,6 +208,7 @@ void TrackingAction::PostUserTrackingAction(const G4Track* track)
 	 analysisManager->FillNtupleDColumn(2, momVec.z());
 	 analysisManager->FillNtupleDColumn(3, ekin);
 	 analysisManager->FillNtupleDColumn(4, time);
+	 analysisManager->FillNtupleDColumn(5, edep);
 
 	 analysisManager->AddNtupleRow();
  }

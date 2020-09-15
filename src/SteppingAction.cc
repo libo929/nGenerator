@@ -77,7 +77,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   //
   G4double edepStep = aStep->GetTotalEnergyDeposit();
   if (edepStep <= 0.) return; 
-  fEventAction->AddEdep(edepStep);
+
+  if(aStep->GetTrack()->GetTrackID()==1) fEventAction->AddEdep(edepStep);
   
  //longitudinal profile of deposited energy
  //randomize point of energy deposition

@@ -51,6 +51,8 @@ class EventAction : public G4UserEventAction
     
     void AddEdep (G4double Edep);
     void AddEflow(G4double Eflow);          
+
+    G4double GetEdep();          
                 
   private:
     G4double fTotalEnergyDeposit;

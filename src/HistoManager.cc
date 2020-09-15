@@ -119,6 +119,7 @@ void HistoManager::Book()
   analysisManager->CreateNtupleDColumn("pz");
   analysisManager->CreateNtupleDColumn("energy");
   analysisManager->CreateNtupleDColumn("time");
+  analysisManager->CreateNtupleDColumn("edep");
   analysisManager->FinishNtuple(); 
 }
 
